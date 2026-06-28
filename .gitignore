@@ -1,0 +1,47 @@
+# Terraform  ================================================
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.json
+.terraform/
+.terraform.lock.hcl
+terraform.tfstate*
+terraform.tfvars*
+terraform.plan
+terraform.crash.log
+*.tf.json
+*.tf.backup
+*.tf.old
+*.auto.tfvars
+*.auto.tfvars.json
+.terraformrc
+terraform.rc
+*.log
+
+# Ansible  ================================================
+.ansible/
+ansible.cfg
+ansible.cfg.bak
+ansible.cfg.old
+inventory/
+inventory.ini
+inventory.yml
+inventory.ini.bak
+inventory.yml.bak
+group_vars/
+host_vars/
+*.vault.yml
+*.vault
+.vault_pass
+.vault_password_file
+ansible.log
+ansible-navigator.log
+*.retry
+*.retry.json
+
+# Général  ================================================
+secrets/
+*.secret
+*.key
+*.pem
+*.pub
