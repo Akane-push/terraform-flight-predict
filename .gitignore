@@ -6,7 +6,7 @@
 .terraform/
 .terraform.lock.hcl
 terraform.tfstate*
-terraform.tfvars*
+terraform.tfvars
 terraform.plan
 terraform.crash.log
 *.tf.json
@@ -45,3 +45,5 @@ secrets/
 *.key
 *.pem
 *.pub
+openrc.sh
+*openrc*
