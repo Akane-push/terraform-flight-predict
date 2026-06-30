@@ -1,93 +1,95 @@
-# terraform-flight-predict
+# Terraform Flight-predict — Infrastructure
 
+Automatisation et déploiement du projet [flight-predict](https://github.com/Akane-push/flight-predict) sur OVH Cloud.
 
+**Note:** Le dépôt GitHub est un miroir du projet principal hébergé sur [GitLab](https://gitlab.com/Akane-Push/terraform-flight-predict)
+Le projet principal (Airflow, APIs, manifests K8s) se trouve sur un dépôt séparé:
+    - [GitHub](https://github.com/Akane-push/flight-predict)
+    - [GitLab](https://gitlab.com/Akane-Push/flight-predict)
 
-## Getting started
+## Objectif
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
-
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
-## Add your files
-
-* [Create](https://docs.gitlab.com/user/project/repository/web_editor/#create-a-file) or [upload](https://docs.gitlab.com/user/project/repository/web_editor/#upload-a-file) files
-* [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
+Le projet automatise la chaîne complète, de l'infrastructure brute jusqu'à l'application fonctionnelle :
 
 ```
-cd existing_repo
-git remote add origin https://gitlab.com/Akane-Push/terraform-flight-predict.git
-git branch -M main
-git push -uf origin main
+Terraform (OVH)  →  Ansible  →  Terraform (Helm)
+  Provisionne        Configure      Déploie
+  les VMs             les VMs        l'app
 ```
 
-## Integrate with your tools
+## Infra cible
 
-* [Set up project integrations](https://gitlab.com/Akane-Push/terraform-flight-predict/-/settings/integrations)
+| Serveur | Rôle |
+|---|---|
+| `k3s-server` | Cluster K3s, héberge Airflow et les APIs (runner-test-kube) |
+| `runner-build` | Build et push des images Docker (runner-build GitLab) |
 
-## Collaborate with your team
+## État d'avancement
 
-* [Invite team members and collaborators](https://docs.gitlab.com/user/project/members/)
-* [Create a new merge request](https://docs.gitlab.com/user/project/merge_requests/creating_merge_requests/)
-* [Automatically close issues from merge requests](https://docs.gitlab.com/user/project/issues/managing_issues/#closing-issues-automatically)
-* [Enable merge request approvals](https://docs.gitlab.com/user/project/merge_requests/approvals/)
-* [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+- [x] **Étape 1 — Provisionnement (Terraform + OVH):** Création des 2 VMs Ubuntu, gestion de la clé SSH
+- [ ] **Étape 2 — Configuration (Ansible):** Installation de K3s, Docker, enregistrement des runners GitLab
+- [ ] **Étape 3 — Déploiement applicatif (Terraform + Helm):** Déploiement des charts Helm (Airflow, APIs) sur K3s
+- [ ] **Étape 4 — Automatisation complète (Gitlab CI):** Automatisation globale via GitLab CI.
 
-## Test and Deploy
+## Prérequis
 
-Use the built-in continuous integration in GitLab.
+- Un compte OVH avec le Public Cloud activé
+- Une paire de clés SSH locale
+- Les credentials ([API OVH](https://eu.api.ovh.com/createToken/))
+- Les credentials OpenStack (fichier OpenRC téléchargé depuis le manager OVH)
+- Terraform >= 1.0
 
-* [Get started with GitLab CI/CD](https://docs.gitlab.com/ci/quick_start/)
-* [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/user/application_security/sast/)
-* [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/topics/autodevops/requirements/)
-* [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/user/clusters/agent/)
-* [Set up protected environments](https://docs.gitlab.com/ci/environments/protected_environments/)
+## Configuration
 
-***
+Copier le fichier d'exemple et le remplir avec vos valeurs :
 
-# Editing this README
+```bash
+cd terraform
+cp terraform.tfvars.example terraform.tfvars
+```
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+```hcl
+# OVH API
+ovh_application_key    = "..."
+ovh_application_secret = "..."
+ovh_consumer_key       = "..."
 
-## Suggestions for a good README
+# OpenStack (depuis le fichier OpenRC)
+os_tenant_id   = "..."
+os_tenant_name = "..."
+os_username    = "..."
+os_password    = "..."
+os_region      = "..."
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+# SSH
+ssh_public_key_path = "./id_ed25519.pub"
+```
 
-## Name
-Choose a self-explaining name for your project.
+> `terraform.tfvars` et `*.pub` sont listés dans `.gitignore` et ne seront jamais committés.
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+## Utilisation
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+```bash
+cd terraform
+terraform init
+terraform plan
+terraform apply
+```
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+À la fin du déploiement, les IPs publiques des deux VMs sont affichées :
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+```bash
+terraform output
+```
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+## Détruire l'infrastructure
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+Pour éviter de consommer des crédits inutilement en dehors des sessions :
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+```bash
+terraform destroy
+```
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+## Notes
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+Le security group `default` fourni par OVH est utilisé tel quel (le quota de security groups custom est à 0 sur ce projet). Il autorise déjà tout le trafic entrant nécessaire.
