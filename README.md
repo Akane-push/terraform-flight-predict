@@ -34,7 +34,7 @@ Terraform (OVH)  →  Ansible  →  Terraform (Helm)
 ## Prérequis
 
 - Un compte OVH avec le Public Cloud activé
-- Une paire de clés SSH locale
+- Une paire de clés SSH locale à la racine du projet
 - Les credentials ([API OVH](https://eu.api.ovh.com/createToken/))
 - Les credentials OpenStack (fichier OpenRC téléchargé depuis le manager OVH)
 - Terraform >= 1.0
@@ -62,10 +62,10 @@ os_password    = "..."
 os_region      = "..."
 
 # SSH
-ssh_public_key_path = "./id_ed25519.pub"
+ssh_public_key_path = "../id_ed25519.pub"
 ```
 
-> `terraform.tfvars` et `*.pub` sont listés dans `.gitignore` et ne seront jamais committés.
+> `terraform.tfvars`, `*.pem` et `*.pub` sont listés dans `.gitignore` et ne seront jamais committés.
 
 ## Utilisation
 

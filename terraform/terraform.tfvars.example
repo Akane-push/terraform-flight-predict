@@ -11,7 +11,7 @@ os_password = "OpenRC-id-pass"
 os_region = "votre-region"
 
 # VMs  ================================================
-ssh_public_key_path = "./id_ed25519.pub"
+ssh_public_key_path = "../id_ed25519.pub"
 vm_image = "Ubuntu 24.04"
 vm_flavor_k3s = "d2-4"
 vm_flavor_runner = "d2-2"
