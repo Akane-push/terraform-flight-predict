@@ -27,9 +27,10 @@ Terraform (OVH)  →  Ansible  →  Terraform (Helm)
 ## État d'avancement
 
 - [x] **Étape 1 — Provisionnement (Terraform + OVH):** Création des 2 VMs Ubuntu, gestion de la clé SSH
-- [ ] **Étape 2 — Configuration (Ansible):** Installation de K3s, Docker, enregistrement des runners GitLab
+- [x] **Étape 2 — Configuration (Ansible):** Installation de K3s, Docker, enregistrement des runners GitLab
 - [ ] **Étape 3 — Déploiement applicatif (Terraform + Helm):** Déploiement des charts Helm (Airflow, APIs) sur K3s
 - [ ] **Étape 4 — Automatisation complète (Gitlab CI):** Automatisation globale via GitLab CI.
+- [ ] **Étape 5 — State Terraform distant** : mise en place d'un backend S3-compatible local pour le state Terraform
 
 ## Prérequis
 
@@ -38,6 +39,7 @@ Terraform (OVH)  →  Ansible  →  Terraform (Helm)
 - Les credentials ([API OVH](https://eu.api.ovh.com/createToken/))
 - Les credentials OpenStack (fichier OpenRC téléchargé depuis le manager OVH)
 - Terraform >= 1.0
+- Ansible >= 2.14
 
 ## Configuration
 
