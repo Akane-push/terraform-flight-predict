@@ -1,0 +1,5 @@
+gitlab_runner_name: "runner-build"
+gitlab_runner_tags: "runner-build"
+gitlab_runner_token: "{{ gitlab_runner_build }}"
+gitlab_runner_executor: "docker"
+gitlab_runner_docker_image: "docker:29.0.4"

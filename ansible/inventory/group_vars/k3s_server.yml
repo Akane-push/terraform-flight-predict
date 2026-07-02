@@ -1,0 +1,4 @@
+gitlab_runner_name: "runner-test-kube"
+gitlab_runner_tags: "runner-test-kube"
+gitlab_runner_token: "{{ gitlab_runner_test_kube }}"
+gitlab_runner_executor: "shell"

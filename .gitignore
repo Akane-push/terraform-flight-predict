@@ -20,17 +20,19 @@ terraform.rc
 
 # Ansible  ================================================
 .ansible/
-ansible.cfg
+#ansible.cfg
 ansible.cfg.bak
 ansible.cfg.old
-inventory/
+#inventory/
+hosts.ini
 inventory.ini
 inventory.yml
 inventory.ini.bak
 inventory.yml.bak
-group_vars/
+#group_vars/
 host_vars/
 *.vault.yml
+*secrets.yml
 *.vault
 .vault_pass
 .vault_password_file

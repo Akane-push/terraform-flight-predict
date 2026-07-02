@@ -1,0 +1,49 @@
+# Firewall  ================================================
+- name: Allow Docker registry access
+  ufw:
+    rule: allow
+    port: "443"
+    proto: tcp
+
+# Docker installation  ================================================
+- name: Check if Docker is already installed
+  stat:
+    path: /usr/bin/docker
+  register: docker_binary
+
+- name: Add Docker repository
+  deb822_repository:
+    name: docker
+    types: deb
+    uris: https://download.docker.com/linux/ubuntu
+    suites: "{{ ansible_distribution_release }}"
+    components: stable
+    architectures: amd64
+    signed_by: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+  when: not docker_binary.stat.exists
+
+- name: Install Docker
+  apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-compose-plugin
+    state: present
+    update_cache: yes
+  when: not docker_binary.stat.exists
+
+- name: Enable and start Docker service
+  service:
+    name: docker
+    enabled: yes
+    state: started
+
+# Allow ubuntu user to run Docker without sudo  ================================================
+- name: Add ubuntu user to docker group
+  user:
+    name: ubuntu
+    groups: docker
+    append: yes

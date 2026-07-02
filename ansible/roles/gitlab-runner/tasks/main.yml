@@ -1,0 +1,49 @@
+# Installation  ================================================
+- name: Check if GitLab Runner is already installed
+  stat:
+    path: /usr/bin/gitlab-runner
+  register: gitlab_runner_binary
+
+- name: Add GitLab Runner repository
+  deb822_repository:
+    name: gitlab-runner
+    types: deb
+    uris: https://packages.gitlab.com/runner/gitlab-runner/ubuntu/
+    suites: "{{ ansible_distribution_release }}"
+    components: main
+    signed_by: https://packages.gitlab.com/runner/gitlab-runner/gpgkey
+    state: present
+  when: not gitlab_runner_binary.stat.exists
+
+- name: Install GitLab Runner
+  apt:
+    name: gitlab-runner
+    state: present
+    update_cache: yes
+  when: not gitlab_runner_binary.stat.exists
+
+- name: Enable and start GitLab Runner service
+  service:
+    name: gitlab-runner
+    enabled: yes
+    state: started
+
+# Registration  ================================================
+- name: Check if runner is already registered
+  command: gitlab-runner list
+  register: runner_list
+  changed_when: false
+
+- name: Register GitLab Runner
+  command: >
+    gitlab-runner register
+    --non-interactive
+    --url "{{ gitlab_url }}"
+    --token "{{ gitlab_runner_token }}"
+    --executor "{{ gitlab_runner_executor }}"
+    {% if gitlab_runner_executor == 'docker' %}
+    --docker-image "{{ gitlab_runner_docker_image }}"
+    --docker-volumes /var/run/docker.sock:/var/run/docker.sock
+    {% endif %}
+  when: gitlab_runner_name not in runner_list.stdout
+  
