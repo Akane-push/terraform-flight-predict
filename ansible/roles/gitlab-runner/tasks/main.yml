@@ -1,4 +1,4 @@
-# Installation  ================================================
+# Installation GitLab Runner  ================================================
 - name: Check if GitLab Runner is already installed
   stat:
     path: /usr/bin/gitlab-runner
@@ -47,3 +47,31 @@
     {% endif %}
   when: gitlab_runner_name not in runner_list.stdout
   
+
+# Installation kubectl  ================================================
+- name: Check if kubectl is already installed
+  stat:
+    path: /usr/local/bin/kubectl
+  register: kubectl_binary
+
+- name: Install kubectl
+  shell: |
+    curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+    install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+    rm kubectl
+  when:
+    - not kubectl_binary.stat.exists
+    - gitlab_runner_executor == 'shell'
+
+
+# Installation helm  ================================================
+- name: Check if helm is already installed
+  stat:
+    path: /usr/local/bin/helm
+  register: helm_binary
+
+- name: Install helm
+  shell: curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+  when:
+    - not helm_binary.stat.exists
+    - gitlab_runner_executor == 'shell'
