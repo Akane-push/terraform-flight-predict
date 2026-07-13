@@ -17,6 +17,7 @@ terraform.crash.log
 .terraformrc
 terraform.rc
 *.log
+kubeconfig.yaml
 
 # Ansible  ================================================
 .ansible/
