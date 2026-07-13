@@ -1,0 +1,24 @@
+# Kubernetes  ================================================
+kubeconfig_path = "./kubeconfig.yaml"
+namespace       = "flight-project"
+
+# Images  ================================================
+image_tag      = "latest"
+image_registry = "registry.gitlab.com/akane-push/flight-predict"
+
+# Secrets  ================================================
+lufth_client_id     = "CHANGEME"
+lufth_client_secret = "CHANGEME"
+lufth_grant_type    = "CHANGEME"
+
+auth_api_key = "CHANGEME"
+
+gitlab_registry_user  = "CHANGEME"
+gitlab_registry_token = "CHANGEME"
+
+# Helm  ================================================
+airflow_chart_version = "1.21.0"
+
+# Storage  ================================================
+k3s_node_name = "CHANGEME"
+k3s_host_path = "/home/ubuntu/flight-predict/Datas"
