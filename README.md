@@ -59,6 +59,7 @@ cd terraform
 cp terraform.tfvars.example terraform.tfvars
 ```
 
+terraform.tfvars:
 ```hcl
 # OVH API
 ovh_application_key    = "..."
@@ -84,6 +85,7 @@ cp inventory/group_vars/all/secrets.yml.example inventory/group_vars/all/secrets
 cp inventory/hosts.ini.example inventory/hosts.ini
 ```
 
+secrets.yml:
 ```yaml
 gitlab_runner_build:     "glrt-..."   # token runner-build
 gitlab_runner_test_kube: "glrt-..."   # token runner-test-kube
@@ -111,17 +113,37 @@ terraform output
 
 ### Étape 2 — Configurer les VMs
 
+Remplir inventory/hosts.ini:
+
 ```ini
 [k3s_server]
 k3s-server ansible_host=IP_K3S_SERVER
 
 [runner_build]
 runner-build ansible_host=IP_RUNNER_BUILD_SERVER
+```
 
-[all:vars]
-ansible_user=ubuntu
-ansible_ssh_private_key_file=chemin/vers/id_ed25519.pem
-ansible_python_interpreter=/usr/bin/python3.12
+Ou générer automatiquement depuis les outputs Terraform :
+
+```bash
+./generate-inventory.sh
+```
+
+Puis lancer Ansible:
+
+```bash
+cd ansible
+export ANSIBLE_SSH_KEY_PATH=/chemin/vers/id_ed25519.pem # <-- Remplacer par le chemin vers votre clef ssh
+ansible-playbook playbook.yml
+```
+
+### Étape 3 — Déployer l'infrastructure
+
+```bash
+cd terraform-k3s
+terraform init
+terraform plan
+terraform apply
 ```
 
 ## Détruire l'infrastructure
@@ -129,9 +151,12 @@ ansible_python_interpreter=/usr/bin/python3.12
 Pour éviter de consommer des crédits inutilement en dehors des sessions :
 
 ```bash
-cd terraform
-terraform destroy
+cd terraform-k3s && terraform destroy
+cd ../
+cd terraform && terraform destroy
 ```
+Dans cet ordre pour éviter de détruire les VMs avant les ressources K8s.
+
 
 ## Notes
 
