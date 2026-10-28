@@ -1,3 +1,4 @@
+```mermaid
 flowchart TD
 
 subgraph group_provisioning["VM provisioning"]
@@ -45,3 +46,4 @@ class node_vm_resources,node_ssh_keys,node_firewall,node_vm_outputs toneBlue
 class node_ansible_inventory,node_common_role,node_docker_role,node_k3s_role,node_runner_role toneAmber
 class node_helm_config toneMint
 class node_operator,node_ovh,node_gitlab,node_k3s_cluster toneIndigo
+```
