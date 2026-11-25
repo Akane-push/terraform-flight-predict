@@ -13,11 +13,14 @@ lufth_grant_type    = "CHANGEME"
 
 auth_api_key = "CHANGEME"
 
+grafana_user = "CHANGEME"
+grafana_pass = "CHANGEME"
+
 gitlab_registry_user  = "CHANGEME"
 gitlab_registry_token = "CHANGEME"
 
 # Helm  ================================================
-airflow_chart_version = "1.21.0"
+airflow_chart_version = "1.22.0"
 
 # Storage  ================================================
 k3s_node_name = "CHANGEME"
