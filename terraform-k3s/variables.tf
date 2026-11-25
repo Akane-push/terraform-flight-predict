@@ -49,6 +49,18 @@ variable "auth_api_key" {
   sensitive   = true
 }
 
+variable "grafana_user" {
+  description = "Graphana user"
+  type        = string
+  sensitive   = true
+}
+
+variable "grafana_pass" {
+  description = "Graphana password"
+  type        = string
+  sensitive   = true
+}
+
 variable "gitlab_registry_user" {
   description = "GitLab registry username"
   type        = string

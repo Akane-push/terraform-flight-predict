@@ -24,6 +24,19 @@ resource "kubernetes_secret" "auth_api" {
   }
 }
 
+# Grafana credentials  ================================================
+resource "kubernetes_secret" "auth_grafana" {
+  metadata {
+    name      = "auth-grafana"
+    namespace = kubernetes_namespace.flight_project.metadata[0].name
+  }
+
+  data = {
+    GF_USER     = var.grafana_user
+    GF_PASSWORD = var.grafana_pass
+  }
+}
+
 # GitLab registry  ================================================
 resource "kubernetes_secret" "gitlab_registry" {
   metadata {
